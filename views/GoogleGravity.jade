@@ -1,0 +1,230 @@
+!!! 5
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    title Google Gravity
+    link(rel='stylesheet', href='style.css')
+    script(src='/socket.io/socket.io.js')      
+  body
+    table#topbar
+      tr
+        td.box2d(onclick='location.href = \'https://plus.google.com/?gpsrc=ogpy0&tab=wX\';')
+          span +You
+        td.box2d.selected(onclick='location.href = \'http://www.google.com/webhp?hl=en&tab=ww\';')
+          span Search
+        td.box2d(onclick='location.href = \'http://www.google.com/imghp?hl=en&tab=wi\';')
+          span Images
+        td.box2d(onclick='location.href = \'http://maps.google.com/maps?hl=en&tab=wl\';')
+          span Maps
+        td.box2d(onclick='location.href = \'https://play.google.com/?hl=en&tab=w8\';')
+          span Play
+        td.box2d(onclick='location.href = \'http://www.youtube.com/?tab=w1\';')
+          span YouTube
+        td.box2d(onclick='location.href = \'http://news.google.com/nwshp?hl=en&tab=wn\';')
+          span News
+        td.box2d(onclick='location.href = \'https://mail.google.com/mail/?tab=wm\';')
+          span Gmail
+        td.box2d(onclick='location.href = \'https://drive.google.com/?tab=wo\';')
+          span Drive
+        td.box2d(onclick='location.href = \'https://www.google.com/calendar?tab=wc\';')
+          span Calendar
+        td.box2d(onclick='location.href = \'http://www.google.com/intl/en/options/\';')
+          span More
+        td.box2d.empty(style='width: 10%;')
+          span  
+        td.box2d.empty(style='width: 20%;')
+          span  
+        td.box2d.empty(style='width: 20%;')
+          span  
+        td.box2d.empty(style='width: 10%;')
+          span  
+        td.box2d.empty(style='width: 5%;')
+          span  
+        td.box2d.empty(style='width: 5%;')
+          span  
+        td.box2d.empty(style='width: 20%;')
+          span  
+    span(style='position: absolute; top: 50px; right: 30px;')
+      button#btnG.box2d(style='color: #fff; font-size: 11px; font-weight: bold; padding: 0 16px; border: 1px solid transparent; background-color: #d14836; text-transform: uppercase;') Sign in
+    #content
+      input#q.box2d(value='', title='Search', autocomplete='off', type='text', maxlength='2048')
+      br
+      span(style='margin: 0 4px;')
+        button#btnG.box2d Google Search
+      span(style='margin: 0 4px;')
+        button#btnI.box2d I'm Feeling Lucky
+    table#bottombar
+      tr
+        td.box2d(style='width: 10%;')
+          span  
+        td.box2d(style='width: 12%;')
+          span  
+        td.box2d(style='width: 8%;')
+          span  
+        td.box2d(style='width: 4%;')
+          span  
+        td.box2d(style='width: 4%;')
+          span  
+        td.box2d(style='width: 5%;')
+          span  
+        td.box2d(style='width: 4%;')
+          span  
+        td.box2d(style='width: 2%;')
+          span  
+    #footer
+      a.box2d(href='http://www.google.com/intl/en/ads/') Advertising Programs
+      a.box2d(href='http://www.google.com/services/') Business Solutions
+      a.box2d(href='http://www.google.com/intl/en/policies/') Privacy & Terms
+      a.box2d(href='https://plus.google.com/116899029375914044550') +Google
+      a.box2d(href='http://www.google.com/intl/en/about.html') About Google
+      a.box2d(href='#') Cethapgames
+    script(type='text/javascript', src='files/api')
+    script(type='text/javascript')
+      /* Based on Alex Arnell's inheritance implementation. */
+      var Class = {
+      create: function() {
+      var parent = null, properties = $A(arguments);
+      if (Object.isFunction(properties[0]))
+      parent = properties.shift();
+      function klass() {
+      this.initialize.apply(this, arguments);
+      }
+      Object.extend(klass, Class.Methods);
+      klass.superclass = parent;
+      klass.subclasses = [];
+      if (parent) {
+      var subclass = function() { };
+      subclass.prototype = parent.prototype;
+      klass.prototype = new subclass;
+      parent.subclasses.push(klass);
+      }
+      for (var i = 0; i < properties.length; i++)
+      klass.addMethods(properties[i]);
+      if (!klass.prototype.initialize)
+      klass.prototype.initialize = this.emptyFunction;
+      klass.prototype.constructor = klass;
+      return klass;
+      },
+      emptyFunction:function () {},
+      };
+      Class.Methods = {
+      addMethods: function(source) {
+      var ancestor   = this.superclass && this.superclass.prototype;
+      var properties = Object.keys(source);
+      if (!Object.keys({ toString: true }).length)
+      properties.push("toString", "valueOf");
+      for (var i = 0, length = properties.length; i < length; i++) {
+      var property = properties[i], value = source[property];
+      if (ancestor && Object.isFunction(value) &&
+      value.argumentNames().first() == "$super") {
+      var method = value, value = Object.extend((function(m) {
+      return function() { return ancestor[m].apply(this, arguments) };
+      })(property).wrap(method), {
+      valueOf:  function() { return method },
+      toString: function() { return method.toString() }
+      });
+      }
+      this.prototype[property] = value;
+      }
+      return this;
+      }
+      };
+      Object.extend = function(destination, source) {
+      for (var property in source)
+      destination[property] = source[property];
+      return destination;
+      };
+      Object.extend(Object, {
+      inspect: function(object) {
+      try {
+      if (Object.isUndefined(object)) return 'undefined';
+      if (object === null) return 'null';
+      return object.inspect ? object.inspect() : String(object);
+      } catch (e) {
+      if (e instanceof RangeError) return '...';
+      throw e;
+      }
+      },
+      toJSON: function(object) {
+      var type = typeof object;
+      switch (type) {
+      case 'undefined':
+      case 'function':
+      case 'unknown': return;
+      case 'boolean': return object.toString();
+      }
+      if (object === null) return 'null';
+      if (object.toJSON) return object.toJSON();
+      if (Object.isElement(object)) return;
+      var results = [];
+      for (var property in object) {
+      var value = Object.toJSON(object[property]);
+      if (!Object.isUndefined(value))
+      results.push(property.toJSON() + ': ' + value);
+      }
+      return '{' + results.join(', ') + '}';
+      },
+      toQueryString: function(object) {
+      return $H(object).toQueryString();
+      },
+      toHTML: function(object) {
+      return object && object.toHTML ? object.toHTML() : String.interpret(object);
+      },
+      keys: function(object) {
+      var keys = [];
+      for (var property in object)
+      keys.push(property);
+      return keys;
+      },
+      values: function(object) {
+      var values = [];
+      for (var property in object)
+      values.push(object[property]);
+      return values;
+      },
+      clone: function(object) {
+      return Object.extend({ }, object);
+      },
+      isElement: function(object) {
+      return object && object.nodeType == 1;
+      },
+      isArray: function(object) {
+      return object != null && typeof object == "object" &&
+      'splice' in object && 'join' in object;
+      },
+      isHash: function(object) {
+      return object instanceof Hash;
+      },
+      isFunction: function(object) {
+      return typeof object == "function";
+      },
+      isString: function(object) {
+      return typeof object == "string";
+      },
+      isNumber: function(object) {
+      return typeof object == "number";
+      },
+      isUndefined: function(object) {
+      return typeof object == "undefined";
+      }
+      });
+      function $A(iterable) {
+      if (!iterable) return [];
+      if (iterable.toArray) return iterable.toArray();
+      var length = iterable.length || 0, results = new Array(length);
+      while (length--) results[length] = iterable[length];
+      return results;
+      }
+      if (WebKit = navigator.userAgent.indexOf('AppleWebKit/') > -1) {
+      $A = function(iterable) {
+      if (!iterable) return [];
+      if (!(Object.isFunction(iterable) && iterable == '[object NodeList]') &&
+      iterable.toArray) return iterable.toArray();
+      var length = iterable.length || 0, results = new Array(length);
+      while (length--) results[length] = iterable[length];
+      return results;
+      };
+      }
+    script(type='text/javascript', src='files/box2d.js')
+    script(type='text/javascript', src='files/move.js')

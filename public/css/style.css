@@ -1,0 +1,25 @@
+.form-signin {
+	padding: 15px;
+	margin: 0 auto;
+}
+
+.txtArea{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	min-height: 150px;
+}
+
+.draggable {
+	position: absolute;
+	left: 30px;
+	top: 30px;
+	width: 60px;
+	height: 60px;
+	margin-left: -30px;
+	margin-top: -30px;
+	color: #FFF;
+	font: bold 16px Helvetica,Arial,Sans-serif;
+	text-align: center;
+	background-color: #ABF;
+	border: 3px solid #669;
+}

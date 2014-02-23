@@ -1,0 +1,32 @@
+html
+head
+    title Example webrtc.io
+    link(type='text/css', href='/css/rtc.css', rel='stylesheet')
+    script(src='/js/webrtc.io.js')
+    script(src='/js/rainyday.js')
+  body(onload='init(); run();')
+    #videos
+      //
+        a href="https://github.com/webRTC"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a
+      video#you.flip(autoplay='autoplay', width='263', height='200', style='position: absolute; left: 0px; bottom: 0px;')
+    #chatbox(style='display: none;')
+      #hideShowMessages.button toggle chat
+      #messages
+      input#chatinput(type='text', placeholder='Message:')
+    .buttonBox(style='display: none;')
+      #fullscreen.button Enter Full Screen
+      #newRoom.button Create A New Room
+    script(src='/js/script.js')
+    script
+      function run() {
+      var image = document.getElementById('background');
+      image.onload = function() {
+      var engine = new RainyDay({
+      image: this
+      });
+      engine.rain([ [0, 2, 200], [3, 3, 1] ], 100);
+      };
+      image.crossOrigin = 'anonymous';
+      image.src = '/img/ima.jpg';
+      }
+    img#background(alt='background', src='')
